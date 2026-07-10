@@ -2,6 +2,12 @@
 
 An asynchronous multi-agent AI pipeline that researches SaaS applications, extracts developer-focused capabilities, verifies information against official documentation, and generates an interactive HTML dashboard.
 
+## Dashboard Preview
+
+<img width="639" height="805" alt="image" src="https://github.com/user-attachments/assets/5fa03f09-a0b3-433b-82eb-c4ebca43a85f" />
+
+
+---
 ---
 
 ## ✨ Features
