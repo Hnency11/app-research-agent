@@ -4,7 +4,7 @@ An asynchronous multi-agent AI pipeline that researches SaaS applications, extra
 
 ## Dashboard Preview
 
-<img src="assets/<img width="400" height="500" alt="image" src="https://github.com/user-attachments/assets/ad850025-f235-4550-84d4-01db8c738511" />
+<img width="400" height="500" alt="image" src="https://github.com/user-attachments/assets/ad850025-f235-4550-84d4-01db8c738511" />
 
 ---
 
