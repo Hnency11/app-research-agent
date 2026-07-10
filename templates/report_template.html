@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Research Pipeline - Interactive Dashboard</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Sleek Dark Mode (Default) Palette */
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --bg-tertiary: #1e293b;
+            --accent-primary: #3b82f6; /* Modern Blue */
+            --accent-secondary: #10b981; /* Emerald Green */
+            --accent-warning: #f59e0b; /* Amber */
+            --accent-danger: #ef4444; /* Rose */
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #2e3c54;
+            --card-shadow: 0 10px 30px -15px rgba(2, 6, 23, 0.7);
+            
+            --transition-speed: 0.3s;
+            --font-display: 'Outfit', sans-serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        [data-theme="light"] {
+            /* Premium Light Mode Palette */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-primary: #2563eb;
+            --accent-secondary: #059669;
+            --accent-warning: #d97706;
+            --accent-danger: #dc2626;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 10px 25px -10px rgba(148, 163, 184, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(19, 27, 46, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        [data-theme="light"] header {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--accent-primary), #6366f1);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.25rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .logo-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* Theme Toggle Switch */
+        .theme-toggle-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-speed);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Dashboard Overview Section */
+        .dashboard-header {
+            margin-bottom: 2.5rem;
+            text-align: left;
+        }
+
+        .dashboard-header h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-primary);
+        }
+
+        .metric-card.success::before {
+            background: var(--accent-secondary);
+        }
+
+        .metric-card.warning::before {
+            background: var(--accent-warning);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-val {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .metric-detail {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.4rem;
+        }
+
+        /* Filter Controls */
+        .controls-panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-wrapper {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.8rem 1.2rem;
+            padding-left: 2.8rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            transition: all var(--transition-speed);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .search-wrapper::before {
+            content: "🔍";
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.95rem;
+            opacity: 0.6;
+        }
+
+        .filters-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color var(--transition-speed);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* SaaS List Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .app-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-title-area h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+        }
+
+        .card-category {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-primary);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .card-confidence {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-confidence.high {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent-secondary);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            min-height: 2.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Properties Grid inside card */
+        .props-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--bg-primary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .prop-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .prop-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prop-val {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Badges status */
+        .verdict-badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+
+        .verdict-badge.buildable {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--accent-secondary);
+        }
+
+        .verdict-badge.unbuildable {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--accent-danger);
+        }
+
+        .verdict-badge.partial {
+            background-color: rgba(245, 158, 107, 0.15);
+            color: var(--accent-warning);
+        }
+
+        .verdict-badge.unknown {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        /* Features tags list */
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.3rem 0.7rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .feature-tag.active {
+            border-color: var(--accent-primary);
+            background-color: rgba(59, 130, 246, 0.05);
+            color: var(--accent-primary);
+        }
+
+        .feature-tag.success {
+            border-color: var(--accent-secondary);
+            background-color: rgba(16, 185, 129, 0.05);
+            color: var(--accent-secondary);
+        }
+
+        /* Card footer details */
+        .card-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .verification-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .indicator-dot.verified {
+            background-color: var(--accent-secondary);
+            box-shadow: 0 0 8px var(--accent-secondary);
+        }
+
+        .indicator-dot.unverified {
+            background-color: var(--text-secondary);
+        }
+
+        .indicator-dot.failed {
+            background-color: var(--accent-danger);
+            box-shadow: 0 0 8px var(--accent-danger);
+        }
+
+        .indicator-dot.needs_review {
+            background-color: var(--accent-warning);
+            box-shadow: 0 0 8px var(--accent-warning);
+        }
+
+        .evidence-links-btn {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color var(--transition-speed);
+        }
+
+        .evidence-links-btn:hover {
+            color: #818cf8;
+        }
+
+        /* Modal Overlay for evidence */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(2, 6, 23, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-speed);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 650px;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform var(--transition-speed);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .evidence-item {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .evidence-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .evidence-item a {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            word-break: break-all;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .evidence-item a:hover {
+            text-decoration: underline;
+        }
+
+        .evidence-snippet {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-style: italic;
+            border-left: 2px solid var(--accent-primary);
+            padding-left: 0.75rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <div class="logo-container">
+            <span class="logo-badge">SRP</span>
+            <span class="logo-title">SaaS Research Pipeline</span>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle-btn" id="themeToggleBtn">
+                <span id="themeToggleIcon">☀️</span> Light Mode
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <section class="dashboard-header">
+            <h1>SaaS Integration Buildability Study</h1>
+            <p>Interactive dashboard compiled from autonomous AI agent evaluations and documented references.</p>
+        </section>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Apps Evaluated</div>
+                <div class="metric-val" id="metricTotalApps">{{ stats.total_apps }}</div>
+                <div class="metric-detail">Processed via batch orchestrator</div>
+            </div>
+            <div class="metric-card success">
+                <div class="metric-label">Integration-Ready</div>
+                <div class="metric-val" id="metricBuildable">{{ stats.buildable_count }}</div>
+                <div class="metric-detail">Verdict: Buildable</div>
+            </div>
+            <div class="metric-card warning">
+                <div class="metric-label">Existing MCP Servers</div>
+                <div class="metric-val" id="metricMCP">{{ stats.mcp_supported_count }}</div>
+                <div class="metric-detail">With native model contexts</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Confidence Score</div>
+                <div class="metric-val" id="metricConfidence">{{ stats.average_confidence }}%</div>
+                <div class="metric-detail">Confidence in extracted metrics</div>
+            </div>
+        </section>
+
+        <!-- Filters & Search -->
+        <section class="controls-panel">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search applications, category, descriptions...">
+            </div>
+            <div class="filters-group">
+                <select id="verdictFilter" class="filter-select">
+                    <option value="all">All Verdicts</option>
+                    <option value="buildable">Buildable</option>
+                    <option value="unbuildable">Unbuildable</option>
+                    <option value="partial">Partial</option>
+                </select>
+                <select id="mcpFilter" class="filter-select">
+                    <option value="all">All MCP Support</option>
+                    <option value="has_mcp">MCP Support Available</option>
+                    <option value="no_mcp">No MCP Support</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Apps Listing Grid -->
+        <section class="apps-grid" id="appsGrid">
+            {% for app in apps %}
+            <div class="app-card" data-name="{{ app.app_name | lower }}" data-category="{{ app.category | lower }}" data-description="{{ app.description | lower }}" data-verdict="{{ app.buildability_verdict | lower }}" data-mcp="{{ 'has_mcp' if app.mcp_support else 'no_mcp' }}">
+                <div>
+                    <div class="card-header">
+                        <div class="card-title-area">
+                            <h2>{{ app.app_name }}</h2>
+                            <span class="card-category">{{ app.category }}</span>
+                        </div>
+                        <span class="card-confidence high">
+                            🎯 {{ app.confidence_score }}%
+                        </span>
+                    </div>
+
+                    <p class="card-description">{{ app.description }}</p>
+
+                    <div class="props-grid">
+                        <div class="prop-item">
+                            <span class="prop-label">Self-Serve Status</span>
+                            <span class="prop-val">{{ app.self_serve_status }}</span>
+                        </div>
+                        <div class="prop-item">
+                            <span class="prop-label">Buildability</span>
+                            <span class="prop-val">
+                                <span class="verdict-badge {{ app.buildability_verdict }}">{{ app.buildability_verdict }}</span>
+                            </span>
+                        </div>
+                        <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
+                            <span class="prop-label">API Surface Scope</span>
+                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">{{ app.api_surface }}</span>
+                        </div>
+                    </div>
+
+                    <div class="features-list">
+                        {% for type in app.api_types %}
+                        <span class="feature-tag active">🔌 {{ type }}</span>
+                        {% endfor %}
+                        
+                        {% if app.sdk_available %}
+                        <span class="feature-tag success">📦 SDK Available</span>
+                        {% endif %}
+                        
+                        {% if app.webhook_support %}
+                        <span class="feature-tag success">🔔 Webhooks</span>
+                        {% endif %}
+                        
+                        {% if app.mcp_support %}
+                        <span class="feature-tag success">🧠 MCP Native</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    {% if app.main_blocker %}
+                    <div style="font-size: 0.85rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.8rem; border-radius: 12px; margin-bottom: 1.2rem; color: var(--accent-danger);">
+                        <strong>Blocker:</strong> {{ app.main_blocker }}
+                    </div>
+                    {% endif %}
+
+                    <div class="card-footer">
+                        <span class="verification-indicator">
+                            <span class="indicator-dot {{ app.verification_status }}"></span>
+                            {{ app.verification_status | replace('_', ' ') }}
+                        </span>
+                        
+                        {% if app.evidence %}
+                        <button class="evidence-links-btn" onclick="openEvidenceModal('{{ app.app_name }}', {{ app.evidence | tojson | forceescape }})">
+                            Evidence ({{ app.evidence | length }})
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+    </div>
+
+    <!-- Modal for Evidence Display -->
+    <div class="modal" id="evidenceModal" onclick="closeEvidenceModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalTitle">SaaS Evidence Records</h3>
+                <button class="modal-close" onclick="closeEvidenceModal(null)">×</button>
+            </div>
+            <div id="modalBody" style="max-height: 450px; overflow-y: auto;">
+                <!-- Filled via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme switching logic
+        const body = document.body;
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+        const themeToggleIcon = document.getElementById("themeToggleIcon");
+
+        themeToggleBtn.addEventListener("click", () => {
+            const currentTheme = body.getAttribute("data-theme");
+            if (currentTheme === "dark") {
+                body.setAttribute("data-theme", "light");
+                themeToggleBtn.innerHTML = "🌙 Dark Mode";
+            } else {
+                body.setAttribute("data-theme", "dark");
+                themeToggleBtn.innerHTML = "☀️ Light Mode";
+            }
+        });
+
+        // Interactive search & filter logics
+        const searchInput = document.getElementById("searchInput");
+        const verdictFilter = document.getElementById("verdictFilter");
+        const mcpFilter = document.getElementById("mcpFilter");
+        const appCards = document.querySelectorAll(".app-card");
+
+        function filterApps() {
+            const query = searchInput.value.toLowerCase().strip ? searchInput.value.toLowerCase().trim() : searchInput.value.toLowerCase();
+            const verdict = verdictFilter.value.toLowerCase();
+            const mcp = mcpFilter.value;
+
+            appCards.forEach(card => {
+                const name = card.getAttribute("data-name");
+                const cat = card.getAttribute("data-category");
+                const desc = card.getAttribute("data-description");
+                const cardVerdict = card.getAttribute("data-verdict");
+                const cardMcp = card.getAttribute("data-mcp");
+
+                const matchesSearch = name.includes(query) || cat.includes(query) || desc.includes(query);
+                const matchesVerdict = verdict === "all" || cardVerdict === verdict;
+                const matchesMcp = mcp === "all" || cardMcp === mcp;
+
+                if (matchesSearch && matchesVerdict && matchesMcp) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener("input", filterApps);
+        verdictFilter.addEventListener("change", filterApps);
+        mcpFilter.addEventListener("change", filterApps);
+
+        // Evidence modal handlers
+        const modal = document.getElementById("evidenceModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+
+        function openEvidenceModal(appName, evidenceList) {
+            modalTitle.innerText = `${appName} - Verification Sources`;
+            modalBody.innerHTML = "";
+
+            if (!evidenceList || evidenceList.length === 0) {
+                modalBody.innerHTML = "<p style='color: var(--text-secondary);'>No references cited.</p>";
+            } else {
+                evidenceList.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "evidence-item";
+                    
+                    const a = document.createElement("a");
+                    a.href = item.url;
+                    a.target = "_blank";
+                    a.innerText = item.title || item.url;
+                    
+                    const snippet = document.createElement("p");
+                    snippet.className = "evidence-snippet";
+                    snippet.innerText = `"${item.snippet}"`;
+
+                    div.appendChild(a);
+                    div.appendChild(snippet);
+                    modalBody.appendChild(div);
+                });
+            }
+            modal.classList.add("active");
+        }
+
+        function closeEvidenceModal(event) {
+            if (!event || event.target === modal || event.target.className === "modal-close") {
+                modal.classList.remove("active");
+            }
+        }
+    </script>
+</body>
+</html>
