@@ -14,8 +14,9 @@ import argparse
 import asyncio
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import pandas as pd
 from core.config import settings
@@ -92,13 +93,16 @@ def load_apps_list(file_path: Path) -> List[dict]:
 async def process_single_app(
     app_row: dict,
     researcher_agent: ResearcherAgent,
+    verifier_agent: VerifierAgent,
     json_storage: JSONStorage,
     semaphore: asyncio.Semaphore,
-    dry_run: bool
+    dry_run: bool,
+    force: bool = False
 ) -> AppResearch:
-    """Orchestrates the research steps for a single application.
+    """Orchestrates the research and verification steps for a single application.
 
-    Ensures rate limits are respected using an asynchronous Semaphore.
+    Respects checkpoints: if data/raw/{safe_name}.json already exists and --force
+    is not set, loads the cached result and skips search, crawling and LLM extraction.
     """
     app_name = app_row.get("app_name", "Unknown App")
     homepage_url = app_row.get("website") or app_row.get("homepage_url", "")
@@ -106,6 +110,13 @@ async def process_single_app(
         homepage_url = "https://" + homepage_url
 
     async with semaphore:
+        # --- Checkpoint check ---
+        if not force:
+            cached = await json_storage.load_app_research(app_name, stage="raw")
+            if cached is not None:
+                logger.info(f"[CHECKPOINT] Skipping {app_name} (checkpoint found).")
+                return cached
+
         logger.info(f"[PIPELINE-FLOW] Commencing research execution for app: {app_name}")
         
         try:
@@ -116,16 +127,21 @@ async def process_single_app(
             csv_category = app_row.get("category")
             if csv_category:
                 raw_research.category = csv_category
-                
+
+            # Always stamp last_updated with the authoritative Python UTC time
+            raw_research.last_updated = datetime.now(timezone.utc)
+
             await json_storage.save_app_research(raw_research, stage="raw")
 
+            # Stage 2: Verifier Agent
+            verified_research = await verifier_agent.run(raw_research)
+
             logger.info(f"[PIPELINE-FLOW] Finished research execution successfully for app: {app_name}")
-            return raw_research
+            return verified_research
 
         except Exception as e:
             logger.error(f"[PIPELINE-FLOW] Critical failure processing app '{app_name}': {str(e)}")
             from core.models import VerificationStatus
-            from datetime import datetime
             return AppResearch(
                 app_name=app_name,
                 category=app_row.get("category") or "Failed Extraction",
@@ -143,20 +159,21 @@ async def process_single_app(
                 confidence_score=0.0,
                 verification_status=VerificationStatus.FAILED,
                 verification_notes=f"Error log: {str(e)}",
-                last_updated=datetime.utcnow()
+                last_updated=datetime.now(timezone.utc)
             )
 
 
-async def run_pipeline(input_csv: Path, dry_run: bool = False) -> None:
+async def run_pipeline(input_csv: Path, dry_run: bool = False, force: bool = False) -> None:
     """Executes the complete end-to-end SaaS research pipeline.
 
     Args:
         input_csv: Path to input CSV file containing app list.
         dry_run: Flag to simulate service responses instead of calling actual APIs.
+        force: If True, bypass checkpoints and reprocess all apps.
     """
     start_time = time.monotonic()
     logger.info("==================================================")
-    logger.info(f"Starting SaaS Research Pipeline (Dry Run: {dry_run})")
+    logger.info(f"Starting SaaS Research Pipeline (Dry Run: {dry_run}, Force: {force})")
     logger.info("==================================================")
 
     # 1. Verify and load application list from input path
@@ -181,23 +198,28 @@ async def run_pipeline(input_csv: Path, dry_run: bool = False) -> None:
     llm_service = LLMService(api_key=settings.GEMINI_API_KEY, provider="gemini")
     extractor_service = ExtractorService(browser_service=browser_service, llm_service=llm_service)
 
-    # 4. Instantiate pipeline agent
+    # 4. Instantiate pipeline agents
     researcher_agent = ResearcherAgent(
         search_service=search_service,
         browser_service=browser_service,
         extractor_service=extractor_service
     )
+    verifier_agent = VerifierAgent(browser_service=browser_service, llm_service=llm_service)
+    analyzer_agent = AnalyzerAgent()
+    html_generator = HTMLReportGenerator()
 
-    # 5. Execute processing tasks concurrently with semaphore limit
+    # 5. Execute research + verification concurrently with semaphore limit
     semaphore = asyncio.Semaphore(settings.MAX_CONCURRENT_RESEARCHERS)
     
     tasks = [
-        process_single_app(app, researcher_agent, json_storage, semaphore, dry_run)
+        process_single_app(app, researcher_agent, verifier_agent, json_storage, semaphore, dry_run, force)
         for app in input_apps
     ]
     
     logger.info(f"Dispatched async task execution pool. Max concurrency limit: {settings.MAX_CONCURRENT_RESEARCHERS}")
     results: List[AppResearch] = await asyncio.gather(*tasks)
+    # Filter out None results defensively
+    results = [r for r in results if r is not None]
 
     # 6. Write consolidated output deliverables to output directory
     logger.info("Writing consolidated output deliverables to output/ directory...")
@@ -205,6 +227,18 @@ async def run_pipeline(input_csv: Path, dry_run: bool = False) -> None:
     await csv_storage.save_bulk_research(results, "research.csv")
 
     elapsed_time = time.monotonic() - start_time
+
+    # 7. Run Analyzer Agent to compile statistics
+    stats: ResearchStatistics = await analyzer_agent.run(
+        research_list=results,
+        total_inputs=len(input_apps),
+        elapsed_time=elapsed_time
+    )
+
+    # 8. Generate HTML case study report
+    report_path = await html_generator.run(research_list=results, stats=stats)
+    logger.info(f"HTML report written to: {report_path}")
+
     logger.info("==================================================")
     logger.info(f"SaaS Pipeline run completed in {elapsed_time:.2f} seconds.")
     logger.info(f"Consolidated results saved to output/research.json and output/research.csv")
@@ -225,12 +259,17 @@ def main() -> None:
         action="store_true", 
         help="Run pipeline using mockup values without making search or LLM API calls"
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Reprocess all apps, ignoring existing raw checkpoints"
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
     
     # Run pipeline loop asynchronously
-    asyncio.run(run_pipeline(input_path, dry_run=args.dry_run))
+    asyncio.run(run_pipeline(input_path, dry_run=args.dry_run, force=args.force))
 
 
 if __name__ == "__main__":

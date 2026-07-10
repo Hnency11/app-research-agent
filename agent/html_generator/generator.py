@@ -5,6 +5,7 @@ Handles loading research datasets and statistics summaries, loading Jinja2 templ
 and rendering premium visual dashboard reports.
 """
 
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -50,7 +51,7 @@ class HTMLReportGenerator(BaseAgent):
         template_vars = {
             "apps": [r.model_dump(mode="json") for r in research_list],
             "stats": stats.model_dump(mode="json"),
-            "generated_at": stats.category_distribution.get("date_placeholder") or "2026-07-09T18:55:00Z"
+            "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
         }
 
         # 2. Load and render template

@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     SERPER_API_KEY: Optional[str] = Field(default=None)
 
     # Concurrency and Safety Limits
-    MAX_CONCURRENT_RESEARCHERS: int = Field(default=5, ge=1)
+    MAX_CONCURRENT_RESEARCHERS: int = Field(default=1, ge=1)
     REQUEST_TIMEOUT_SECONDS: int = Field(default=30, ge=1)
     HTTP_MAX_RETRIES: int = Field(default=3, ge=0)
     HTTP_RETRY_BACKOFF_FACTOR: float = Field(default=2.0, ge=1.0)

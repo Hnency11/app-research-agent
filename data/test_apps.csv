@@ -1,2 +1,7 @@
 ﻿id,category,app_name,website
-21,Communications and Messaging,Slack,slack.com
+1,CRM and Sales,Salesforce,salesforce.com
+2,Support and Helpdesk,Zendesk,zendesk.com
+3,Marketing Ads Email and Social,Google Ads,developers.google.com/google-ads
+4,Ecommerce,Shopify,shopify.dev
+5,Data SEO and Scraping,DataForSEO,docs.dataforseo.com
+

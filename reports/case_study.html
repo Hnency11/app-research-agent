@@ -667,22 +667,22 @@
         <section class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-label">Apps Evaluated</div>
-                <div class="metric-val" id="metricTotalApps">5</div>
+                <div class="metric-val" id="metricTotalApps">1</div>
                 <div class="metric-detail">Processed via batch orchestrator</div>
             </div>
             <div class="metric-card success">
                 <div class="metric-label">Integration-Ready</div>
-                <div class="metric-val" id="metricBuildable">5</div>
+                <div class="metric-val" id="metricBuildable">1</div>
                 <div class="metric-detail">Verdict: Buildable</div>
             </div>
             <div class="metric-card warning">
                 <div class="metric-label">Existing MCP Servers</div>
-                <div class="metric-val" id="metricMCP">0</div>
+                <div class="metric-val" id="metricMCP">1</div>
                 <div class="metric-detail">With native model contexts</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Avg Confidence Score</div>
-                <div class="metric-val" id="metricConfidence">90.0%</div>
+                <div class="metric-val" id="metricConfidence">100.0%</div>
                 <div class="metric-detail">Confidence in extracted metrics</div>
             </div>
         </section>
@@ -710,19 +710,19 @@
         <!-- Apps Listing Grid -->
         <section class="apps-grid" id="appsGrid">
             
-            <div class="app-card" data-name="mockapp" data-category="analytics" data-description="a developer tool for saas event pipeline analytics" data-verdict="buildable" data-mcp="no_mcp">
+            <div class="app-card" data-name="slack" data-category="communications and messaging" data-description="a communication platform that enables team collaboration through interactive apps, automated workflows, and extensive api integrations." data-verdict="buildable" data-mcp="has_mcp">
                 <div>
                     <div class="card-header">
                         <div class="card-title-area">
-                            <h2>MockApp</h2>
-                            <span class="card-category">Analytics</span>
+                            <h2>Slack</h2>
+                            <span class="card-category">Communications and Messaging</span>
                         </div>
                         <span class="card-confidence high">
-                            🎯 90.0%
+                            🎯 100.0%
                         </span>
                     </div>
 
-                    <p class="card-description">A developer tool for SaaS event pipeline analytics</p>
+                    <p class="card-description">A communication platform that enables team collaboration through interactive apps, automated workflows, and extensive API integrations.</p>
 
                     <div class="props-grid">
                         <div class="prop-item">
@@ -737,7 +737,7 @@
                         </div>
                         <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
                             <span class="prop-label">API Surface Scope</span>
-                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Public REST APIs and GraphQL interfaces</span>
+                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Extensive developer platform offering over 200 Web API methods, event subscriptions, socket-based communication, and AI-ready MCP servers.</span>
                         </div>
                     </div>
 
@@ -746,6 +746,12 @@
                         <span class="feature-tag active">🔌 REST</span>
                         
                         <span class="feature-tag active">🔌 Webhooks</span>
+                        
+                        <span class="feature-tag active">🔌 WebSocket</span>
+                        
+                        <span class="feature-tag active">🔌 SDK</span>
+                        
+                        <span class="feature-tag active">🔌 MCP</span>
                         
                         
                         
@@ -757,73 +763,7 @@
                         
                         
                         
-                    </div>
-                </div>
-
-                <div>
-                    
-
-                    <div class="card-footer">
-                        <span class="verification-indicator">
-                            <span class="indicator-dot verified"></span>
-                            verified
-                        </span>
-                        
-                        
-                        <button class="evidence-links-btn" onclick="openEvidenceModal('MockApp', [{&#34;extracted_at&#34;: &#34;2026-07-09T18:55:00Z&#34;, &#34;snippet&#34;: &#34;Our developer platform supports REST commands and webhooks.&#34;, &#34;title&#34;: &#34;API Reference Documentation&#34;, &#34;url&#34;: &#34;https://docs.mockapp.com/api&#34;}])">
-                            Evidence (1)
-                        </button>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <div class="app-card" data-name="mockapp" data-category="analytics" data-description="a developer tool for saas event pipeline analytics" data-verdict="buildable" data-mcp="no_mcp">
-                <div>
-                    <div class="card-header">
-                        <div class="card-title-area">
-                            <h2>MockApp</h2>
-                            <span class="card-category">Analytics</span>
-                        </div>
-                        <span class="card-confidence high">
-                            🎯 90.0%
-                        </span>
-                    </div>
-
-                    <p class="card-description">A developer tool for SaaS event pipeline analytics</p>
-
-                    <div class="props-grid">
-                        <div class="prop-item">
-                            <span class="prop-label">Self-Serve Status</span>
-                            <span class="prop-val">self-serve</span>
-                        </div>
-                        <div class="prop-item">
-                            <span class="prop-label">Buildability</span>
-                            <span class="prop-val">
-                                <span class="verdict-badge buildable">buildable</span>
-                            </span>
-                        </div>
-                        <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
-                            <span class="prop-label">API Surface Scope</span>
-                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Public REST APIs and GraphQL interfaces</span>
-                        </div>
-                    </div>
-
-                    <div class="features-list">
-                        
-                        <span class="feature-tag active">🔌 REST</span>
-                        
-                        <span class="feature-tag active">🔌 Webhooks</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">📦 SDK Available</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">🔔 Webhooks</span>
-                        
-                        
+                        <span class="feature-tag success">🧠 MCP Native</span>
                         
                     </div>
                 </div>
@@ -833,217 +773,13 @@
 
                     <div class="card-footer">
                         <span class="verification-indicator">
-                            <span class="indicator-dot verified"></span>
-                            verified
+                            <span class="indicator-dot failed"></span>
+                            failed
                         </span>
                         
                         
-                        <button class="evidence-links-btn" onclick="openEvidenceModal('MockApp', [{&#34;extracted_at&#34;: &#34;2026-07-09T18:55:00Z&#34;, &#34;snippet&#34;: &#34;Our developer platform supports REST commands and webhooks.&#34;, &#34;title&#34;: &#34;API Reference Documentation&#34;, &#34;url&#34;: &#34;https://docs.mockapp.com/api&#34;}])">
-                            Evidence (1)
-                        </button>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <div class="app-card" data-name="mockapp" data-category="analytics" data-description="a developer tool for saas event pipeline analytics" data-verdict="buildable" data-mcp="no_mcp">
-                <div>
-                    <div class="card-header">
-                        <div class="card-title-area">
-                            <h2>MockApp</h2>
-                            <span class="card-category">Analytics</span>
-                        </div>
-                        <span class="card-confidence high">
-                            🎯 90.0%
-                        </span>
-                    </div>
-
-                    <p class="card-description">A developer tool for SaaS event pipeline analytics</p>
-
-                    <div class="props-grid">
-                        <div class="prop-item">
-                            <span class="prop-label">Self-Serve Status</span>
-                            <span class="prop-val">self-serve</span>
-                        </div>
-                        <div class="prop-item">
-                            <span class="prop-label">Buildability</span>
-                            <span class="prop-val">
-                                <span class="verdict-badge buildable">buildable</span>
-                            </span>
-                        </div>
-                        <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
-                            <span class="prop-label">API Surface Scope</span>
-                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Public REST APIs and GraphQL interfaces</span>
-                        </div>
-                    </div>
-
-                    <div class="features-list">
-                        
-                        <span class="feature-tag active">🔌 REST</span>
-                        
-                        <span class="feature-tag active">🔌 Webhooks</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">📦 SDK Available</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">🔔 Webhooks</span>
-                        
-                        
-                        
-                    </div>
-                </div>
-
-                <div>
-                    
-
-                    <div class="card-footer">
-                        <span class="verification-indicator">
-                            <span class="indicator-dot verified"></span>
-                            verified
-                        </span>
-                        
-                        
-                        <button class="evidence-links-btn" onclick="openEvidenceModal('MockApp', [{&#34;extracted_at&#34;: &#34;2026-07-09T18:55:00Z&#34;, &#34;snippet&#34;: &#34;Our developer platform supports REST commands and webhooks.&#34;, &#34;title&#34;: &#34;API Reference Documentation&#34;, &#34;url&#34;: &#34;https://docs.mockapp.com/api&#34;}])">
-                            Evidence (1)
-                        </button>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <div class="app-card" data-name="mockapp" data-category="analytics" data-description="a developer tool for saas event pipeline analytics" data-verdict="buildable" data-mcp="no_mcp">
-                <div>
-                    <div class="card-header">
-                        <div class="card-title-area">
-                            <h2>MockApp</h2>
-                            <span class="card-category">Analytics</span>
-                        </div>
-                        <span class="card-confidence high">
-                            🎯 90.0%
-                        </span>
-                    </div>
-
-                    <p class="card-description">A developer tool for SaaS event pipeline analytics</p>
-
-                    <div class="props-grid">
-                        <div class="prop-item">
-                            <span class="prop-label">Self-Serve Status</span>
-                            <span class="prop-val">self-serve</span>
-                        </div>
-                        <div class="prop-item">
-                            <span class="prop-label">Buildability</span>
-                            <span class="prop-val">
-                                <span class="verdict-badge buildable">buildable</span>
-                            </span>
-                        </div>
-                        <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
-                            <span class="prop-label">API Surface Scope</span>
-                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Public REST APIs and GraphQL interfaces</span>
-                        </div>
-                    </div>
-
-                    <div class="features-list">
-                        
-                        <span class="feature-tag active">🔌 REST</span>
-                        
-                        <span class="feature-tag active">🔌 Webhooks</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">📦 SDK Available</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">🔔 Webhooks</span>
-                        
-                        
-                        
-                    </div>
-                </div>
-
-                <div>
-                    
-
-                    <div class="card-footer">
-                        <span class="verification-indicator">
-                            <span class="indicator-dot verified"></span>
-                            verified
-                        </span>
-                        
-                        
-                        <button class="evidence-links-btn" onclick="openEvidenceModal('MockApp', [{&#34;extracted_at&#34;: &#34;2026-07-09T18:55:00Z&#34;, &#34;snippet&#34;: &#34;Our developer platform supports REST commands and webhooks.&#34;, &#34;title&#34;: &#34;API Reference Documentation&#34;, &#34;url&#34;: &#34;https://docs.mockapp.com/api&#34;}])">
-                            Evidence (1)
-                        </button>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <div class="app-card" data-name="mockapp" data-category="analytics" data-description="a developer tool for saas event pipeline analytics" data-verdict="buildable" data-mcp="no_mcp">
-                <div>
-                    <div class="card-header">
-                        <div class="card-title-area">
-                            <h2>MockApp</h2>
-                            <span class="card-category">Analytics</span>
-                        </div>
-                        <span class="card-confidence high">
-                            🎯 90.0%
-                        </span>
-                    </div>
-
-                    <p class="card-description">A developer tool for SaaS event pipeline analytics</p>
-
-                    <div class="props-grid">
-                        <div class="prop-item">
-                            <span class="prop-label">Self-Serve Status</span>
-                            <span class="prop-val">self-serve</span>
-                        </div>
-                        <div class="prop-item">
-                            <span class="prop-label">Buildability</span>
-                            <span class="prop-val">
-                                <span class="verdict-badge buildable">buildable</span>
-                            </span>
-                        </div>
-                        <div class="prop-item" style="grid-column: span 2; margin-top: 0.5rem;">
-                            <span class="prop-label">API Surface Scope</span>
-                            <span class="prop-val" style="font-weight: 500; font-size: 0.85rem;">Public REST APIs and GraphQL interfaces</span>
-                        </div>
-                    </div>
-
-                    <div class="features-list">
-                        
-                        <span class="feature-tag active">🔌 REST</span>
-                        
-                        <span class="feature-tag active">🔌 Webhooks</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">📦 SDK Available</span>
-                        
-                        
-                        
-                        <span class="feature-tag success">🔔 Webhooks</span>
-                        
-                        
-                        
-                    </div>
-                </div>
-
-                <div>
-                    
-
-                    <div class="card-footer">
-                        <span class="verification-indicator">
-                            <span class="indicator-dot verified"></span>
-                            verified
-                        </span>
-                        
-                        
-                        <button class="evidence-links-btn" onclick="openEvidenceModal('MockApp', [{&#34;extracted_at&#34;: &#34;2026-07-09T18:55:00Z&#34;, &#34;snippet&#34;: &#34;Our developer platform supports REST commands and webhooks.&#34;, &#34;title&#34;: &#34;API Reference Documentation&#34;, &#34;url&#34;: &#34;https://docs.mockapp.com/api&#34;}])">
-                            Evidence (1)
+                        <button class="evidence-links-btn" onclick="openEvidenceModal('Slack', [{&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.467258&#34;, &#34;snippet&#34;: &#34;Slack | AI work platform and productivity toolsSkip to main contentAll your people and AI agents working together.Slack connects your team. Slackbot multiplies what they can do.Get startedFind your subscriptionTrusted by top teamsAsk SlackbotPlan launchesRun projectsChat with clientsAutomate tasksAs...&#34;, &#34;title&#34;: &#34;Slack Homepage&#34;, &#34;url&#34;: &#34;https://slack.com/&#34;}, {&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.711561&#34;, &#34;snippet&#34;: &#34;Slack developer docs | Slack Developer Docs\nguideSkip to main contentWelcome to the Slack API docs, the place where ideas turn into interactive apps, workflows get automated, and Slack becomes the platform that powers your workday.NewCreate an agent\nGet started\u200b\nCreate your first Slack app quickly.\n...&#34;, &#34;title&#34;: &#34;Slack API&#34;, &#34;url&#34;: &#34;https://docs.slack.dev/&#34;}, {&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.711561&#34;, &#34;snippet&#34;: &#34;Node Slack SDK | Slack Developer Docs\njavascriptSkip to main contentOn this page\nThe Node Slack SDK is a collection of single-purpose packages for building Slack apps that are performant, secure, and scalable.\nJust starting out?The Getting Started tutorial will walk you through building your first S...&#34;, &#34;title&#34;: &#34;Node Slack SDK | Slack Developer Docs&#34;, &#34;url&#34;: &#34;https://docs.slack.dev/tools/node-slack-sdk&#34;}, {&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.711561&#34;, &#34;snippet&#34;: &#34;Installing with OAuth | Slack Developer Docs\nguideSkip to main contentOn this page\nSlack apps are installed with a v2 OAuth 2.0 flow. We\u0027re sorry about all the \&#34;2s\&#34;: OAuth 2.0 refers to the 2.0 version of the OAuth spec, and this is our second version of OAuth 2.0. For the rest of this guide, we\u0027ll ...&#34;, &#34;title&#34;: &#34;Installing with OAuth | Slack Developer Docs&#34;, &#34;url&#34;: &#34;https://docs.slack.dev/authentication/installing-with-oauth&#34;}, {&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.711561&#34;, &#34;snippet&#34;: &#34;Authentication overview | Slack Developer Docs\nguideSkip to main contentOn this page\nAuthentication is a critical part of the development process, but it doesn\u2019t have to be daunting. With the right tools and best practices, you\u2019ll have a secure, smooth authentication flow. Whether you\u2019re handling OA...&#34;, &#34;title&#34;: &#34;Authentication overview | Slack Developer Docs&#34;, &#34;url&#34;: &#34;https://docs.slack.dev/authentication&#34;}, {&#34;extracted_at&#34;: &#34;2026-07-10T12:35:45.711561&#34;, &#34;snippet&#34;: &#34;Overview | Slack Developer Docs\nguideSkip to main contentOn this pageModel Context Protocol (MCP) is an open standard designed to give AI agents a consistent, secure way to discover and use external data, tools, and services. MCP standardizes how applications provide context to LLMs.\nWith the Slack ...&#34;, &#34;title&#34;: &#34;Overview | Slack Developer Docs&#34;, &#34;url&#34;: &#34;https://docs.slack.dev/ai/slack-mcp-server&#34;}])">
+                            Evidence (6)
                         </button>
                         
                     </div>
@@ -1054,7 +790,10 @@
 
     </div>
 
-    <!-- Modal for Evidence Display -->
+    <footer style="text-align:center; padding: 2rem 1rem 3rem; color: var(--text-secondary); font-size: 0.85rem;">
+        Generated by SaaS Research Pipeline &mdash; 2026-07-10 12:39 UTC
+    </footer>
+
     <div class="modal" id="evidenceModal" onclick="closeEvidenceModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -1091,7 +830,7 @@
         const appCards = document.querySelectorAll(".app-card");
 
         function filterApps() {
-            const query = searchInput.value.toLowerCase().strip ? searchInput.value.toLowerCase().trim() : searchInput.value.toLowerCase();
+            const query = searchInput.value.toLowerCase().trim();
             const verdict = verdictFilter.value.toLowerCase();
             const mcp = mcpFilter.value;
 
